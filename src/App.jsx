@@ -11,20 +11,26 @@ function App() {
   // regular search
   const searchItems = (searchTerm) => {
     if (!searchTerm) return;
-
     const regex = /\s+/g;
-
     const normalizeTerm = searchTerm.toLowerCase().replace(regex, "");
-
     const output = top100Films.filter((film) =>
       film.label.toLowerCase().replace(regex, "").includes(normalizeTerm)
     );
-
     setResults(output);
   };
 
+  // debounce
+  const debounce = () => {
+    const timeout = setTimeout(() => {
+      searchItems(label);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  };
+
   useEffect(() => {
-    searchItems(label);
+    debounce();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [label]);
 
   return (
